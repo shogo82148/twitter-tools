@@ -24,3 +24,8 @@ Crawling user's tweets tool.
     $ python crawler.py users-id path-to-save
 
 Save user's tweets to "path-to-save.tsv", and recent status id to "path-to-save.since_id".
+
+## update_status.py
+Update status using status/update API
+
+    $ python update_state.py --lat=latitude --long=longitude -i in_reply_to_status_id  'tweet'
