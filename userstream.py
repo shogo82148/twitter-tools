@@ -13,23 +13,50 @@ sys.stdout = codecs.getwriter('utf-8')(sys.stdout)
 
 class MyListener(tweepy.StreamListener):
     def on_status(self, status):
-        print util.toString(status)
+        print '@%s:%s%s' % (
+            status.author.screen_name,
+            ' ' * (15-len(status.author.screen_name)),
+            status.text,
+            )
+        sys.stdin.flush()
+
+    def on_delete(self, status_id, user_id):
+        print '[delete] %d deleted %d' % (
+            user_id,
+            status_id,
+            )
+        sys.stdin.flush()
+
+    def on_limit(self, track):
+        print '[limit] %s' % track
+
+    def on_error(self, status_code):
+        print '[error] %d' % status_code
+        sys.stdin.flush()
+
+    def on_timeout(self):
+        print '[timeout]'
+        sys.stdin.flush()
+
+class RawListener(tweepy.StreamListener):
+    def on_data(self, data):
+        print data
         sys.stdin.flush()
 
 def main():
     parser = OptionParser()
-    """parser.add_option("-r", "--raw", dest="raw",
-                      default=False,
-                      help="in_reply_to_status_id")
-    parser.add_option("--lat", dest="lat",
-                      help="latitude")
-    parser.add_option("--long", dest="long",
-                      help="longitude")"""
+    parser.add_option("-r", "--raw", dest="raw",
+                      action="store_true", default=False,
+                      help="Print raw data")
     (options, args) = parser.parse_args()
 
     auth = tweepy.OAuthHandler(config.consumer_key, config.consumer_secret)
     auth.set_access_token(config.access_key, config.access_secret)
-    stream = tweepy.Stream(auth, MyListener())
+    if options.raw:
+        listener = RawListener()
+    else:
+        listener = MyListener()
+    stream = tweepy.Stream(auth, listener)
     stream.userstream()
 
 if __name__ == "__main__":
