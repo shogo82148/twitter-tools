@@ -48,6 +48,9 @@ def main():
     parser.add_option("-r", "--raw", dest="raw",
                       action="store_true", default=False,
                       help="Print raw data")
+    parser.add_option("-n", "--nosecure", dest="secure",
+                      action="store_false", default=True,
+                      help="Do not use https")
     (options, args) = parser.parse_args()
 
     auth = tweepy.OAuthHandler(config.consumer_key, config.consumer_secret)
@@ -56,7 +59,7 @@ def main():
         listener = RawListener()
     else:
         listener = MyListener()
-    stream = tweepy.Stream(auth, listener)
+    stream = tweepy.Stream(auth, listener, secure = options.secure)
     stream.userstream()
 
 if __name__ == "__main__":
