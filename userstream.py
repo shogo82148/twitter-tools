@@ -18,30 +18,30 @@ class MyListener(tweepy.StreamListener):
             ' ' * (15-len(status.author.screen_name)),
             status.text,
             )
-        sys.stdin.flush()
+        sys.stdout.flush()
 
     def on_delete(self, status_id, user_id):
         print '[delete] %d deleted %d' % (
             user_id,
             status_id,
             )
-        sys.stdin.flush()
+        sys.stdout.flush()
 
     def on_limit(self, track):
         print '[limit] %s' % track
 
     def on_error(self, status_code):
         print '[error] %d' % status_code
-        sys.stdin.flush()
+        sys.stdout.flush()
 
     def on_timeout(self):
         print '[timeout]'
-        sys.stdin.flush()
+        sys.stdout.flush()
 
 class RawListener(tweepy.StreamListener):
     def on_data(self, data):
         print data
-        sys.stdin.flush()
+        sys.stdout.flush()
 
 def main():
     parser = OptionParser()
