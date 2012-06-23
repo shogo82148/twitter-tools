@@ -29,3 +29,14 @@ Save user's tweets to "path-to-save.tsv", and recent status id to "path-to-save.
 Update status using status/update API
 
     $ python update_state.py --lat=latitude --long=longitude -i in_reply_to_status_id  'tweet'
+
+## stream.py
+Get tweets with streaming API
+
+    $ python stream.py # connect to userstream
+    $ python stream.py --raw # Show raw JSON data
+    $ python stream.py userstream
+    $ python stream.py sample
+    $ python stream.py retweet
+    $ python stream.py firehose
+    $ python stream.py filter keywords

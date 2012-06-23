@@ -51,6 +51,10 @@ def main():
     parser.add_option("-n", "--nosecure", dest="secure",
                       action="store_false", default=True,
                       help="Do not use https")
+    parser.add_option("-f", "--follow", dest="follow",
+                      action="store")
+    parser.add_option("-l", "--locations", dest="locations",
+                      action="store")
     (options, args) = parser.parse_args()
 
     auth = tweepy.OAuthHandler(config.consumer_key, config.consumer_secret)
@@ -60,7 +64,28 @@ def main():
     else:
         listener = MyListener()
     stream = tweepy.Stream(auth, listener, secure = options.secure)
-    stream.userstream()
+
+    if len(args)==0:
+        stream.userstream()
+    elif args[0] == 'userstream':
+        stream.userstream()
+    elif args[0] == 'sample':
+        stream.sample()
+    elif args[0] == 'retweet':
+        stream.retweet()
+    elif args[0] == 'firehose':
+        stream.firehose()
+    elif args[0] == 'filter':
+        track = None
+        follow = None
+        locations = None
+        if len(args)>1:
+            track = args[1:]
+        if options.follow:
+            follow = options.follow.split(',')
+        if options.locations:
+            locations = [float(s) for s in options.locations.split(',')]
+        stream.filter(track=track, follow=follow, locations=locations)
 
 if __name__ == "__main__":
   main()
