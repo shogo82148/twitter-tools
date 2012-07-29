@@ -29,12 +29,12 @@ def main():
     auth.set_access_token(config.access_key, config.access_secret)
     api = tweepy.API(auth)
 
-    arg = {'id': user_id}
+    arg = {'id': user_id, 'include_rts': 1}
     if os.path.exists(since_id):
         since_id_file = codecs.open(since_id, 'r', 'utf-8')
         arg['since_id'] = since_id_file.readline().rstrip()
         since_id_file.close()
-    
+
     tsv = []
     ids = []
     try:
@@ -45,8 +45,7 @@ def main():
             ids.append(user_status.id)
     except tweepy.error.TweepError, e:
         print >>sys.stderr, "tweepy error occurred: error status " + str(e.reason)
-        sys.exit()
-    
+
     if len(tsv)==0:
         return
 
